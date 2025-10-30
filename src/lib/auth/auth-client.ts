@@ -1,5 +1,9 @@
 import { createAuthClient } from "better-auth/react";
+import { magicLinkClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_BASE_URL, // aponta para nosso backend do Better Auth
+  baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_BASE_URL,
+  plugins: [
+    magicLinkClient()
+  ]
 });
