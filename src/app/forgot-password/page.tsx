@@ -17,19 +17,22 @@ export default function ForgotPasswordPage() {
     setMessage("");
 
     try {
-      // Aqui vamos implementar o reset de senha
-      // Por enquanto, vamos simular o envio
-      console.log("Solicitando reset para:", email);
+      // MÉTODO NATIVO: Solicitar link de reset por email
+      const res = await authClient.requestPasswordReset({
+        email,
+        redirectTo: "/reset-password", // Página para onde redirecionar após clicar no link
+      });
       
-      // Simulação de delay de API
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      setIsSuccess(true);
-      setMessage(`Código de recuperação enviado para ${email}! Verifique sua caixa de entrada.`);
+      if (res.error) {
+        setMessage("Erro ao enviar link: " + res.error.message);
+      } else {
+        setIsSuccess(true);
+        setMessage(`Link de redefinição enviado para ${email}! Verifique sua caixa de entrada e spam.`);
+      }
       
     } catch (error) {
       console.error("Erro ao solicitar reset:", error);
-      setMessage("Erro ao enviar código de recuperação. Tente novamente.");
+      setMessage("Erro ao enviar link de recuperação. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +51,7 @@ export default function ForgotPasswordPage() {
             Esqueci minha senha
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Digite seu email para receber um código de recuperação
+            Digite seu email para receber um link de recuperação
           </p>
         </div>
         
@@ -83,10 +86,10 @@ export default function ForgotPasswordPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Enviando código...
+                      Enviando link...
                     </>
                   ) : (
-                    "Enviar código de recuperação"
+                    "Enviar link de recuperação"
                   )}
                 </button>
               </div>
@@ -98,16 +101,10 @@ export default function ForgotPasswordPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900">Código enviado!</h3>
+              <h3 className="text-lg font-medium text-gray-900">Email enviado!</h3>
               <p className="text-sm text-gray-600">
-                Verifique sua caixa de entrada e spam
+                Verifique sua caixa de entrada e spam. Clique no link recebido para redefinir sua senha.
               </p>
-              <Link
-                href="/reset-password"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
-              >
-                Inserir código de recuperação
-              </Link>
             </div>
           )}
 
