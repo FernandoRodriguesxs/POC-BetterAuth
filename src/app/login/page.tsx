@@ -30,7 +30,27 @@ export default function LoginPage() {
 
   // Logar com Google OAuth
   async function handleGoogleLogin() {
-    await authClient.signIn.social({ provider: "google" });
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+    } catch (error) {
+      console.error("Erro no login com Google:", error);
+      setMessage("Erro ao fazer login com Google. Tente novamente.");
+    }
+  }
+
+  async function handleMicrosoftLogin() {
+    try {
+      await authClient.signIn.social({
+        provider: "microsoft",
+        callbackURL: "/dashboard",
+      });
+    } catch (error) {
+      console.error("Erro no login com Microsoft:", error);
+      setMessage("Erro ao fazer login com Microsoft. Tente novamente.");
+    }
   }
 
   return (
@@ -109,7 +129,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div>
+            <div className="space-y-3">
               <button
                 type="button"
                 onClick={handleGoogleLogin}
@@ -123,6 +143,30 @@ export default function LoginPage() {
                 </svg>
                 <span className="ml-2">Entrar com Google</span>
               </button>
+
+              <button
+                type="button"
+                onClick={handleMicrosoftLogin}
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#F25022" d="M1 1h10.5v10.5H1z"/>
+                  <path fill="#00A4EF" d="M12.5 1H23v10.5H12.5z"/>
+                  <path fill="#7FBA00" d="M1 12.5h10.5V23H1z"/>
+                  <path fill="#FFB900" d="M12.5 12.5H23V23H12.5z"/>
+                </svg>
+                <span className="ml-2">Entrar com Microsoft</span>
+              </button>
+
+              <Link
+                href="/magic-link"
+                className="w-full inline-flex justify-center py-2 px-4 border border-purple-300 rounded-md shadow-sm bg-gradient-to-r from-purple-50 to-pink-50 text-sm font-medium text-purple-700 hover:from-purple-100 hover:to-pink-100 transition-all duration-200"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                <span className="ml-2">🪄 Entrar com Magic Link</span>
+              </Link>
             </div>
           </form>
 
